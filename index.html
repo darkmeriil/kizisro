@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KIZI s. r. o. — Moderné účtovníctvo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+        /* ── Design System & Variables ── */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-dark:       #0a0b0d;
+            --bg-card:       #121418;
+            --text-main:     #f3f4f6;
+            --text-muted:    #9ca3af;
+            --primary:       #00ff87;
+            --primary-glow:  rgba(0, 255, 135, 0.15);
+            --border-line:   rgba(255, 255, 255, 0.06);
+            --font-display:  'Space Grotesk', system-ui, sans-serif;
+            --font-body:     'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--bg-dark);
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-main);
+            background-color: var(--bg-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Typography ── */
+        h1, h2, h3 {
+            font-family: var(--font-display);
+            font-weight: 600;
+        }
+
+        h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; letter-spacing: -0.02em; }
+        h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.2; letter-spacing: -0.01em; }
+        h3 { font-size: 1.25rem; font-weight: 500; }
+        p { color: var(--text-muted); font-weight: 300; }
+
+        /* ── Layout & Structure ── */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            position: relative;
+            padding: 8rem 0;
+            border-bottom: 1px solid var(--border-line);
+            z-index: 1;
+        }
+
+        /* ── Decorative Background Elements ── */
+        .blur-gradient {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── Navigation ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(10, 11, 13, 0.75);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-line);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 2rem;
+            background: rgba(10, 11, 13, 0.9);
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-cta {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--bg-dark);
+            background: var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(0, 255, 135, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(0, 255, 135, 0.3);
+        }
+
+        /* ── Hero Section ── */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 6rem;
+        }
+
+        .hero-layout {
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-line);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .hero-title {
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title span {
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title em {
+            font-style: normal;
+            color: var(--primary);
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            max-width: 54ch;
+            margin-bottom: 3rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .btn-main {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--bg-dark);
+            background: var(--primary);
+            padding: 0.9rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-main:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+            border: 1px solid var(--border-line);
+            padding: 0.9rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.2s ease;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* ── Grid Elements & Cards ── */
+        .section-intro {
+            margin-bottom: 5rem;
+            max-width: 600px;
+        }
+
+        .section-label {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .card-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-line);
+            padding: 3rem;
+            border-radius: 16px;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .card-item:hover {
+            border-color: rgba(0, 255, 135, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-item h3 {
+            margin-bottom: 0.75rem;
+        }
+
+        /* ── Pillars / Approach ── */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+        }
+
+        .pillars-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .pillar-item {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .pillar-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin-top: 0.6rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 12px var(--primary);
+        }
+
+        .pillar-item h3 {
+            margin-bottom: 0.25rem;
+        }
+
+        /* ── Info / Registry Data ── */
+        #spolocnost {
+            background: linear-gradient(180deg, var(--bg-dark) 0%, #0e1115 100%);
+        }
+
+        .info-matrix {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .matrix-cell {
+            background: rgba(255, 255, 255, 0.01);
+            border-top: 1px solid var(--border-line);
+            padding-top: 1.5rem;
+        }
+
+        .matrix-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .matrix-value {
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .matrix-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* ── Contact Block ── */
+        .contact-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-line);
+            border-radius: 24px;
+            padding: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 135, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .contact-content h2 {
+            margin-bottom: 1rem;
+        }
+
+        .contact-channels {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: right;
+        }
+
+        .channel-link {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .channel-link:hover {
+            opacity: 0.8;
+        }
+
+        .channel-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Footer ── */
+        footer {
+            padding: 3rem 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-credit strong {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* ── Scroll Animations (Fix: Východiskový stav je viditeľný, JS pridá plynulosť) ── */
+        .fade-in {
+            opacity: 1;
+            transform: none;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        @media (min-width: 969px) {
+            .js-enabled .fade-in {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            .js-enabled .fade-in.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Responsive Adjustment ── */
+        @media (max-width: 968px) {
+            .grid-cards, .split-layout, .info-matrix {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .contact-box {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 3rem;
+                padding: 2.5rem;
+            }
+
+            .contact-channels {
+                text-align: left;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Blurs -->
+    <div class="blur-gradient" style="top: 10%; right: -5%;"></div>
+    <div class="blur-gradient" style="top: 40%; left: -10%;"></div>
+
+    <!-- Navigation -->
+    <nav id="main-nav">
+        <a href="#" class="nav-logo">KIZI<span>.</span></a>
+        <ul class="nav-links">
+            <li><a href="#sluzby">Služby</a></li>
+            <li><a href="#pristup">Náš prístup</a></li>
+            <li><a href="#spolocnost">Údaje</a></li>
+            <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+        <a href="#kontakt" class="nav-cta">Konzultácia</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="container">
+            <div class="hero-layout fade-in">
+                <div class="hero-badge">Nová éra firemných financií</div>
+                <h1 class="hero-title">
+                    <span>Zrozumiteľné dáta pre úspešný</span> <em>rast</em><span>.</span>
+                </h1>
+                <p class="hero-description">
+                    Zabezpečujeme komplexný outsourcing účtovnej a mzdovej agendy. 
+                    Prevezmeme komunikáciu s úradmi, zatiaľ čo vy sa môžete plne sústrediť na rozvoj vášho podnikania.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#kontakt" class="btn-main">Začať spoluprácu</a>
+                    <a href="#sluzby" class="btn-outline">Služby</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="sluzby">
+        <div class="container">
+            <div class="section-intro fade-in">
+                <span class="section-label">Portfólio</span>
+                <h2>Komplexné služby pre váš biznis</h2>
+            </div>
+            
+            <div class="grid-cards">
+                <div class="card-item fade-in">
+                    <div class="card-icon">■</div>
+                    <h3>Vedenie účtovníctva</h3>
+                    <p>Precízne spracovanie podvojného aj jednoduchého účtovníctva pre živnostníkov, malé a stredné spoločnosti s dôrazom na legislatívnu správnosť.</p>
+                </div>
+                <div class="card-item fade-in">
+                    <div class="card-icon">▲</div>
+                    <h3>Mzdová agenda</h3>
+                    <p>Kompletné spracovanie miezd, personalistika, vedenie mzdových listov a spoľahlivý manažment odvodových povinností zamestnancov.</p>
+                </div>
+                <div class="card-item fade-in">
+                    <div class="card-icon">◆</div>
+                    <h3>Daňové priznania</h3>
+                    <p>Zostavenie a elektronické podanie daňových priznaní k dani z príjmov fyzických aj právnických osôb, spracovanie DPH a ostatných lokálnych daní.</p>
+                </div>
+                <div class="card-item fade-in">
+                    <div class="card-icon">⬢</div>
+                    <h3>Úradná komunikácia</h3>
+                    <p>Plné zastupovanie pred správcom dane, Sociálnou poisťovňou a zdravotnými poisťovňami. Vyriešime za vás akékoľvek byrokratické úkony.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Approach Section -->
+    <section id="pristup">
+        <div class="container">
+            <div class="split-layout">
+                <div class="fade-in">
+                    <span class="section-label">Filozofia</span>
+                    <h2>Partner, na ktorého sa môžete spoľahnúť</h2>
+                    <p style="margin-top: 1.5rem;">
+                        Naším poslaním je prinášať do firemných financií maximálnu transparentnosť a efektivitu, čím prispievame k dlhodobej stabilite vášho podnikania.
+                    </p>
+                </div>
+                <div class="pillars-list fade-in">
+                    <div class="pillar-item">
+                        <div class="pillar-dot"></div>
+                        <div>
+                            <h3>Personálny prístup</h3>
+                            <p>Každý klient vyžaduje špecifické riešenia. Spoznáme váš biznis model a prispôsobíme procesy vašej štruktúre.</p>
+                        </div>
+                    </div>
+                    <div class="pillar-item">
+                        <div class="pillar-dot"></div>
+                        <div>
+                            <h3>Absolútna spoľahlivosť</h3>
+                            <p>Termíny a presnosť legislatívy sú pre nás privatou. Minimalizujeme riziká a chránime vaše podnikanie.</p>
+                        </div>
+                    </div>
+                    <div class="pillar-item">
+                        <div class="pillar-dot"></div>
+                        <div>
+                            <h3>Odborné vedenie</h3>
+                            <p>Ponúkame nielen mechanické spracovanie dokladov, ale aj strategické poradenstvo a pomoc pri optimalizácii nákladov.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registry Data Section -->
+    <section id="spolocnost">
+        <div class="container">
+            <div class="section-intro fade-in">
+                <span class="section-label">Transparentnosť</span>
+                <h2>Identifikačné údaje</h2>
+            </div>
+
+            <div class="info-matrix">
+                <div class="matrix-cell fade-in">
+                    <div class="matrix-label">Obchodné meno</div>
+                    <div class="matrix-value">KIZI s. r. o.</div>
+                </div>
+                <div class="matrix-cell fade-in">
+                    <div class="matrix-label">IČO</div>
+                    <div class="matrix-value">52 435 440</div>
+                </div>
+                <div class="matrix-cell fade-in">
+                    <div class="matrix-label">DIČ</div>
+                    <div class="matrix-value">2121132805</div>
+                </div>
+                <div class="matrix-cell fade-in">
+                    <div class="matrix-label">IČ DPH</div>
+                    <div class="matrix-value">SK2121132805</div>
+                    <div class="matrix-sub">podľa §4, registrácia od 1.2.2025</div>
+                </div>
+                <div class="matrix-cell fade-in">
+                    <div class="matrix-label">Sídlo</div>
+                    <div class="matrix-value">Pod lesom 1010/18<br />060 01 Kežmarok</div>
+                </div>
+                <div class="matrix-cell fade-in">
+                    <div class="matrix-label">Dátum vzniku</div>
+                    <div class="matrix-value">štvrtok 30. mája 2019</div>
+                </div>
+                <div class="matrix-cell fade-in" style="grid-column: span 2;">
+                    <div class="matrix-label">SK NACE</div>
+                    <div class="matrix-value">6920 Účtovnícke a audítorské činnosti, vedenie účtovných kníh; daňové poradenstvo</div>
+                </div>
+                <div class="matrix-cell fade-in">
+                    <div class="matrix-label">Historický názov</div>
+                    <div class="matrix-value">MysliSrdcom.sk s.r.o.</div>
+                    <div class="matrix-sub">platné do: 20.9.2021</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="kontakt" style="border: none;">
+        <div class="container">
+            <div class="contact-box fade-in">
+                <div class="contact-content">
+                    <h2>Zefektívnite svoje účtovníctvo</h2>
+                    <p>Napíšte nám e-mail a dohodnite si úvodnú bezplatnú konzultáciu.</p>
+                </div>
+                <div class="contact-channels">
+                    <div>
+                        <div class="channel-text">Primárny kontakt</div>
+                        <a href="mailto:info@kizi.sk" class="channel-link">info@kizi.sk</a>
+                    </div>
+                    <div>
+                        <div class="channel-text">Lokalita kancelárie</div>
+                        <span style="color: var(--text-main);">Kežmarok, Slovensko</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div class="container">
+        <footer>
+            <div class="footer-layout">
+                <div>&copy; 2026 KIZI s. r. o. Všetky práva vyhradené.</div>
+                <div class="footer-credit">Created by <strong>RZeon</strong></div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Tell CSS that Javascript is active to enable transitions safely
+        document.documentElement.classList.add('js-enabled');
+
+        // Navbar animation on scroll
+        const navigationBar = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navigationBar.classList.add('scrolled');
+            } else {
+                navigationBar.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for scroll-reveal
+        const animatedElements = document.querySelectorAll('.fade-in');
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    scrollObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.05
+        });
+
+        animatedElements.forEach(element => {
+            scrollObserver.observe(element);
+        });
+    </script>
+</body>
+</html>
