@@ -416,7 +416,7 @@
             font-weight: 500;
         }
 
-        /* ── Scroll Animations (Fix: Východiskový stav je viditeľný, JS pridá plynulosť) ── */
+        /* ── Scroll Animations ── */
         .fade-in {
             opacity: 1;
             transform: none;
@@ -439,6 +439,10 @@
             .grid-cards, .split-layout, .info-matrix {
                 grid-template-columns: 1fr;
                 gap: 3rem;
+            }
+
+            .info-matrix .matrix-cell[style*="grid-column"] {
+                grid-column: auto !important;
             }
 
             .contact-box {
@@ -601,14 +605,9 @@
                     <div class="matrix-label">Dátum vzniku</div>
                     <div class="matrix-value">štvrtok 30. mája 2019</div>
                 </div>
-                <div class="matrix-cell fade-in" style="grid-column: span 2;">
+                <div class="matrix-cell fade-in" style="grid-column: span 3;">
                     <div class="matrix-label">SK NACE</div>
                     <div class="matrix-value">6920 Účtovnícke a audítorské činnosti, vedenie účtovných kníh; daňové poradenstvo</div>
-                </div>
-                <div class="matrix-cell fade-in">
-                    <div class="matrix-label">Historický názov</div>
-                    <div class="matrix-value">MysliSrdcom.sk s.r.o.</div>
-                    <div class="matrix-sub">platné do: 20.9.2021</div>
                 </div>
             </div>
         </div>
@@ -625,7 +624,7 @@
                 <div class="contact-channels">
                     <div>
                         <div class="channel-text">Primárny kontakt</div>
-                        <a href="mailto:info@kizi.sk" class="channel-link">info@kizi.sk</a>
+                        <a href="mailto:info@kizisro.sk" class="channel-link">info@kizisro.sk</a>
                     </div>
                     <div>
                         <div class="channel-text">Lokalita kancelárie</div>
